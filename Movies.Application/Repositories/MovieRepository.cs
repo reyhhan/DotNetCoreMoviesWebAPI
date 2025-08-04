@@ -1,9 +1,4 @@
 ﻿using Movies.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Movies.Application.Repositories
 {
@@ -31,6 +26,12 @@ namespace Movies.Application.Repositories
         public Task<Movie?> GetByIdAsync(Guid Id)
         {
             var movie = _movies.SingleOrDefault(x => x.Id == Id);
+            return Task.FromResult(movie);
+        }
+
+        public Task<Movie?> GetBySlugAsync(string slug)
+        {
+            var movie = _movies.SingleOrDefault(x => x.Slug == slug);
             return Task.FromResult(movie);
         }
 
