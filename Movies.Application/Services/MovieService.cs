@@ -11,9 +11,10 @@ namespace Movies.Application.Services
         private readonly IValidator<Movie> _validator;
         private readonly IRatingRepository _ratingRepository;
 
-        public MovieService(IMovieRepository movieRepository, IValidator<Movie> validator)
+        public MovieService(IMovieRepository movieRepository, IRatingRepository ratingRepository,  IValidator<Movie> validator)
         {
             _movieRepository = movieRepository;
+            _ratingRepository = ratingRepository;
             _validator = validator; 
         }
         public async Task<bool> CreateAsync(Movie movie, CancellationToken token)

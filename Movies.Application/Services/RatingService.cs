@@ -30,7 +30,6 @@ namespace Movies.Application.Services
         public async Task<(float? Rating, int? UserRating)> GetRatingAsync(Guid movieId, Guid userId, CancellationToken token = default)
         {
             return await _ratingRepository.GetRatingAsync(movieId, userId, token);
-
         }
 
         public async Task<IEnumerable<MovieRating>> GetRatingsForUserAsync(Guid userId, CancellationToken token)
