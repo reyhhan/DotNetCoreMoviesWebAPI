@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Movies.Api.Auth;
 using Movies.Api.Mapping;
 using Movies.Application;
 using Movies.Application.Database;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -9,6 +13,40 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x=>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(config["Jwt:Key"]!)),
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
+        ValidIssuer = config["Jwt:Issuer"],
+        ValidAudience = config["Jwt:Audience"],
+        ValidateIssuer = true,
+        ValidateAudience = true
+    };
+});
+builder.Services.AddAuthorization(x =>
+{
+    x.AddPolicy(AuthConstants.AdminUserPolicyName, policy =>
+    {
+        policy.RequireClaim(AuthConstants.AdminUserClaimName, "true");
+    });
+
+    x.AddPolicy(AuthConstants.TrustedMemberPolicyName, policy =>
+    {
+        policy.RequireAssertion(context =>
+            context.User.HasClaim(m => m is { Type : AuthConstants.AdminUserClaimName, Value : "true" }) ||
+            context.User.HasClaim(m => m is { Type: AuthConstants.TrustedMemberClaimName, Value: "true" }));
+    });
+});
 
 var connectionString = builder.Configuration.GetSection("Database:ConnectionString").Get<string>();
 // Add services to the container.
@@ -31,6 +69,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ValidationMappingMiddleware>();
 app.MapControllers();
