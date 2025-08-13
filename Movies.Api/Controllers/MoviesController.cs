@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Movies.Api.Auth;
 using Movies.Api.Mapping;
@@ -8,7 +9,7 @@ using System.Net;
 
 namespace Movies.Api.Controllers
 {
-   
+    [ApiVersion(1.0)]
     [ApiController]
     public class MoviesController : ControllerBase
     {
@@ -20,17 +21,17 @@ namespace Movies.Api.Controllers
         }
 
         [Authorize(AuthConstants.TrustedMemberPolicyName)]
-
         [HttpPost(ApiEndpoints.Movies.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMovieRequest request, CancellationToken token)
         {
             var movie = request.MapToMovie();
             await _movieService.CreateAsync(movie, token);
-            return CreatedAtAction(nameof(Get), new { idOrSlug = movie.Id }, movie);
+            return CreatedAtAction(nameof(GetV1), new { idOrSlug = movie.Id }, movie);
         }
 
+        
         [HttpGet(ApiEndpoints.Movies.GetById)]
-        public async Task<IActionResult> Get([FromRoute] string idOrSlug, CancellationToken token)
+        public async Task<IActionResult> GetV1([FromRoute] string idOrSlug, CancellationToken token)
         {
             var userId = HttpContext.GetUserId();
 
@@ -41,9 +42,25 @@ namespace Movies.Api.Controllers
             {
                 return NotFound();
             }
-
             return Ok(movie.MapToResponse());
         }
+
+        
+        //[HttpGet(ApiEndpoints.Movies.GetById)]
+        //public async Task<IActionResult> GetV2([FromRoute] string idOrSlug, CancellationToken token)
+        //{
+        //    var userId = HttpContext.GetUserId();
+
+        //    var movie = Guid.TryParse(idOrSlug, out var id)
+        //        ? await _movieService.GetByIdAsync(id, userId, token)
+        //        : await _movieService.GetBySlugAsync(idOrSlug, userId, token);
+        //    if (movie == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(movie.MapToResponse());
+        //}
 
         [HttpGet(ApiEndpoints.Movies.GetAll)]
         public async Task<IActionResult> GetAll([FromQuery] GetAllMoviesRequest request, CancellationToken token)
