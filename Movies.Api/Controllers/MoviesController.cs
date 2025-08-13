@@ -70,12 +70,11 @@ namespace Movies.Api.Controllers
             {
                 return NotFound();
             }
-            var response = movie.MapToResponse();
+            var response = updatedMovie.MapToResponse();
             return Ok(response);
         }
 
         [Authorize(AuthConstants.AdminUserPolicyName)]
-
         [HttpDelete(ApiEndpoints.Movies.Delete)]
         public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken token)
         {

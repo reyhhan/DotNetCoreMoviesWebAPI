@@ -2,3 +2,6 @@ API endpoint mappings - make sure the variables in the url path and all the para
 E.g {{id:sting}} must be (String id) in the controller
 
 In Dapper, if you use cast the query result to a  custom Object make sure the column name in DB table and Object model are matching!
+
+
+When doing filtering, go top down.i.e controller first.
