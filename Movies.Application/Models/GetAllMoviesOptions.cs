@@ -17,6 +17,8 @@ namespace Movies.Application.Models
         public string? SortField { get; set; }
 
         public SortOrder? SortOrder { get; set; }
+        public required int Page { get; init; } = 1;
+        public required int PageSize { get; init; } = 10;
     }
 
     public enum SortOrder

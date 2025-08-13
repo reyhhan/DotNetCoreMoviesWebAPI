@@ -54,12 +54,13 @@ namespace Movies.Api.Controllers
 
             var movies = await _movieService.GetAllAsync(options, token);
 
-            var moviesResponse = movies.MapToResponse();
+            var movieCount = await _movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
+
+            var moviesResponse = movies.MapToResponse(request.Page, request.PageSize, movieCount);
             return Ok(moviesResponse);
         }
 
         [Authorize(AuthConstants.TrustedMemberPolicyName)]
-
         [HttpPut(ApiEndpoints.Movies.Update)]
         public async Task<IActionResult> Update([FromBody] UpdateMovieRequest request, [FromRoute] Guid id, CancellationToken token)
         {

@@ -89,12 +89,16 @@ namespace Movies.Application.Repositories
                 AND myr.userid = @userid
                 WHERE (@title is null or LOWER(m.title) like ('%' || @title || '%'))
                 AND (@yearofrelease is null or m.yearOfRelease = @yearofrelease)
-                group by id, userrating {orderClause}
+                GROUP BY id, userrating {orderClause}
+                LIMIT @pageSize
+                OFFSET @pageOffset
                 """, new 
                 { 
                   userid = options.UserId,
                   title = options.Title?.ToLower(),
-                  yearofrelease = options.YearOfRelease
+                  yearofrelease = options.YearOfRelease,
+                  pageSize = options.PageSize,
+                  pageOffset = (options.Page - 1) * options.PageSize
             },
                 cancellationToken: token));
          
@@ -175,6 +179,17 @@ namespace Movies.Application.Repositories
             }
             return movie;
 
+        }
+
+        public async Task<int> GetCountAsync(string? title, int? yearOfrelease, CancellationToken token)
+        {
+            using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
+            return await connection.QuerySingleAsync<int>(
+               new CommandDefinition("""
+                    SELECT count(id) FROM movies
+                    WHERE(@title is null or LOWER(title) like('%' || @title || '%'))
+                    And (@yearOfRelease is null or yearOfRelease = @yearOfrelease)
+                    """, new { title = title?.ToLower(), yearOfrelease }, cancellationToken: token));
         }
 
         public async Task<bool> UpdateAsync(Movie movie, CancellationToken token = default)

@@ -50,7 +50,12 @@ namespace Movies.Application.Services
         public Task<Movie?> GetBySlugAsync(string slug, Guid? userid = default, CancellationToken token =default)
         {
             return _movieRepository.GetBySlugAsync(slug, userid, token );
-        } 
+        }
+
+        public Task<int> GetCountAsync(string? title, int? yearOfrelease, CancellationToken token)
+        {
+           return _movieRepository.GetCountAsync(title, yearOfrelease, token);
+        }
 
         public async Task<Movie?> UpdateAsync(Movie movie, Guid? userid = default, CancellationToken token = default)
         {

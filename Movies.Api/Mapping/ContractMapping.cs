@@ -15,7 +15,6 @@ namespace Movies.Api.Mapping
                 YearOfRelease = request.YearOfRelease,
                 Genres = request.Genres.ToList()
             };
-
         }
 
         public static Movie MapToMovie(this UpdateMovieRequest request, Guid id)
@@ -27,7 +26,6 @@ namespace Movies.Api.Mapping
                 YearOfRelease = request.YearOfRelease,
                 Genres = request.Genres.ToList()
             };
-
         }
 
         public static MovieResponse MapToResponse(this Movie movie)
@@ -44,11 +42,14 @@ namespace Movies.Api.Mapping
             };
         }
 
-        public static MoviesResponse MapToResponse(this IEnumerable<Movie> movies)
+        public static MoviesResponse MapToResponse(this IEnumerable<Movie> movies, int page, int pageSize, int totalCount)
         {
             return new MoviesResponse
             {
-                Items = movies.Select(MapToResponse)
+                Items = movies.Select(MapToResponse),
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount
             };
         }
 
@@ -72,7 +73,9 @@ namespace Movies.Api.Mapping
                 SortOrder = request.SortBy is null ? SortOrder.Unsorted
                     : request.SortBy.StartsWith('-')
                         ? SortOrder.Descending
-                        : SortOrder.Ascending
+                        : SortOrder.Ascending,
+                Page = request.Page,
+                PageSize = request.PageSize
             };
         }
 
