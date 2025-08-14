@@ -9,7 +9,7 @@
 
             public const string Create = Base;
 
-            public const string GetById = $"{Base}/{{idORSlug}}";
+            public const string GetById = $"{Base}/{{idOrSlug}}";
 
             public const string GetAll = Base;
 
