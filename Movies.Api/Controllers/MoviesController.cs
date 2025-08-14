@@ -77,7 +77,7 @@ namespace Movies.Api.Controllers
         }
 
         [Authorize(AuthConstants.TrustedMemberPolicyName)]
-        [ServiceFilter(typeof(ApiKeyAuthFilter))]
+        //[ServiceFilter(typeof(ApiKeyAuthFilter))]
         [HttpPut(ApiEndpoints.Movies.Update)]
         [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -100,7 +100,6 @@ namespace Movies.Api.Controllers
 
         [Authorize(AuthConstants.AdminUserPolicyName)]
         //[ServiceFilter(typeof(ApiKeyAuthFilter))]
-
         [HttpDelete(ApiEndpoints.Movies.Delete)]
         [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
