@@ -40,10 +40,12 @@ builder.Services.AddAuthentication(x =>
 });
 builder.Services.AddAuthorization(x =>
 {
-    x.AddPolicy(AuthConstants.AdminUserPolicyName, policy =>
-    {
-        policy.RequireClaim(AuthConstants.AdminUserClaimName, "true");
-    });
+    //x.AddPolicy(AuthConstants.AdminUserPolicyName, policy =>
+    //{
+    //    policy.RequireClaim(AuthConstants.AdminUserClaimName, "true");
+    //});
+    x.AddPolicy(AuthConstants.AdminUserPolicyName,
+       p => p.AddRequirements(new AdminAuthRequirement(config["ApiKey"]!)));
 
     x.AddPolicy(AuthConstants.TrustedMemberPolicyName, policy =>
     {
@@ -55,6 +57,7 @@ builder.Services.AddAuthorization(x =>
 
 var connectionString = builder.Configuration.GetSection("Database:ConnectionString").Get<string>();
 // Add services to the container.
+builder.Services.AddScoped<ApiKeyAuthFilter>();
 
 builder.Services.AddApiVersioning(x =>
 {
