@@ -10,6 +10,7 @@ using Movies.Contracts.Responses;
 
 namespace Movies.Api.Controllers
 {
+    /*
     [ApiVersion(1.0)]
     [ApiController]
     public class RatingsController : ControllerBase
@@ -64,4 +65,5 @@ namespace Movies.Api.Controllers
             return Ok(response);
         }
     }
+    */
 }

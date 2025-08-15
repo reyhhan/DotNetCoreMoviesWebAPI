@@ -11,6 +11,7 @@ using System.Net;
 
 namespace Movies.Api.Controllers
 {
+    /*
     [ApiVersion(1.0)]
     [ApiController]
     public class MoviesController : ControllerBase
@@ -72,8 +73,9 @@ namespace Movies.Api.Controllers
 
             var movieCount = await _movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
 
-            var moviesResponse = movies.MapToResponse(request.Page, request.PageSize, movieCount);
-            return Ok(moviesResponse);
+            //var moviesResponse = movies.MapToResponse(request.Page, request.PageSize, movieCount);
+            //return Ok(moviesResponse);
+            return Ok();
         }
 
         [Authorize(AuthConstants.TrustedMemberPolicyName)]
@@ -116,5 +118,5 @@ namespace Movies.Api.Controllers
         }
 
     }
-    
+    */
 }
